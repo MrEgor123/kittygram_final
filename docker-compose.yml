@@ -3,25 +3,50 @@ version: '3'
 volumes:
   pg_data:
   static:
+  media:
 
 services:
   db:
     image: postgres:13
+    env_file: .env
     volumes:
       - pg_data:/var/lib/postgresql/data
+    networks:
+      - kittygram_final_kittygram_network
+
   backend:
     build: ./backend/
     env_file: .env
+    depends_on:
+      - db
+    volumes:
+      - static:/backend_static
+      - media:/media
+    networks:
+      - kittygram_final_kittygram_network
+
   frontend:
-    env_file: .env
     build: ./frontend/
+    env_file: .env
     command: cp -r /app/build/. /static/
     volumes:
       - static:/static
-  gateway:
+    networks:
+      - kittygram_final_kittygram_network
+
+  nginx:
     build: ./nginx/
     env_file: .env
     ports:
-      - 9000:80
+      - "9000:80"
     volumes:
       - static:/static
+      - media:/media
+    depends_on:
+      - backend
+    networks:
+      - kittygram_final_kittygram_network
+
+networks:
+  kittygram_final_kittygram_network:
+    driver: bridge
