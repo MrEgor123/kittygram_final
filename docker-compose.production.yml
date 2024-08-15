@@ -14,7 +14,7 @@ services:
     platform: linux/amd64
 
   backend:
-    image: mregor123/kittygram_backend
+    image: ${DOCKER_USERNAME}/kittygram_backend
     env_file: .env
     depends_on:
       - db
@@ -24,7 +24,7 @@ services:
     platform: linux/amd64
 
   frontend:
-    image: mregor123/kittygram_frontend
+    image: ${DOCKER_USERNAME}/kittygram_frontend
     env_file: .env
     depends_on:
       - backend
@@ -34,7 +34,7 @@ services:
     platform: linux/amd64
 
   gateway:
-    image: mregor123/kittygram_gateway
+    image: ${DOCKER_USERNAME}/kittygram_gateway
     env_file: .env
     depends_on:
       - frontend
